@@ -1,10 +1,13 @@
 import streamlit as st
 from langchain_core.messages import HumanMessage
 from backend import execute
+import uuid
 
 st.title("🌐 Chat Sphere")
+if "thread_id" not in st.session_state:
+    st.session_state["thread_id"] = str(uuid.uuid4())
 message_history = []
-config = {"configurable":{"thread_id":"thread_1"}}
+config = {"configurable":{"thread_id":st.session_state["thread_id"]}}
 if "message_history" not in st.session_state:
     st.session_state["message_history"] = []
 else:
