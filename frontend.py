@@ -23,7 +23,10 @@ if user_input:
     with st.chat_message("user", avatar="👤"):
         st.text(user_input)
     user_message = {"messages":user_input}
-    ai_response = execute.invoke(user_message,config=config)
-    st.session_state["message_history"].append({"role":"ai","content":ai_response["messages"][-1].content, "avatar":"🤖"})
+   
+    
     with st.chat_message("ai",avatar="🤖"):
-        st.text(ai_response["messages"][-1].content)
+        ai_stream_response = execute.stream(user_message,config=config,stream_mode="messages")
+        ai_response = st.write_stream(message_chunk.content for message_chunk,metadata in ai_stream_response)
+    st.session_state["message_history"].append({"role":"ai","content":ai_response, "avatar":"🤖"})
+        
